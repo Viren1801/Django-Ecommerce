@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{%load static%}
+{% load crispy_forms_tags %}
+
+
+{%block titlebar%}
+  <title>add user</title>
+{%endblock%}
+
+{% block page-head %}
+   User Page
+{% endblock %}
+
+{% block breadcrumb %}
+   User page
+{% endblock %}
+
+{% block wrapper%}
+
+<div class="col-md-12">
+    <div class="card card-primary">
+      <form method="post" action="{% url 'custom_admin:UserUpdate' id %}">
+           <div class="card-body">
+               {% csrf_token %}
+
+                 <div class=" form-group is-invalid" aria-required={% if form.email.field.required %}"true"{% else %}"false"{% endif %}>
+                        {{ form.email.label_tag }}{% if form.email.field.required %}<span class="required">*</span>{% endif %}
+
+                        {{ form.email }}
+
+                        {% if form.email.errors %}
+                            <div class="col-sm-6">
+                                <strong id="passwordHelp" class="text-danger">
+                            {{ form.email.errors }}
+                                </strong>
+                            </div>
+                         {% endif %}
+
+                        <p class="help">{{ form.email.help_text|safe }}</p>
+                    </div>
+
+                 <div class=" form-group is-invalid" aria-required={% if form.first_name.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.first_name.label_tag }}{% if form.first_name.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.first_name }}
+
+                            {% if form.first_name.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.first_name.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.first_name.help_text|safe }}</p>
+                        </div>
+
+                        <div class=" form-group is-invalid" aria-required={% if form.last_name.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.last_name.label_tag }}{% if form.last_name.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.last_name }}
+
+                            {% if form.last_name.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.last_name.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.last_name.help_text|safe }}</p>
+                        </div>
+
+                        <div class=" form-group is-invalid" aria-required={% if form.groups.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.groups.label_tag }}{% if form.groups.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.groups }}
+
+                            {% if form.groups.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.groups.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.groups.help_text|safe }}</p>
+                        </div>
+
+                        <div class=" form-group is-invalid" aria-required={% if form.is_active.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.is_active.label_tag }}{% if form.is_active.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.is_active }}
+
+                            {% if form.is_active.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.is_active.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.is_active.help_text|safe }}</p>
+                        </div>
+
+           </div>
+            <div class="card-footer">
+	       <button type="submit" class="btn btn-primary">submit</button>
+                <a class="btn btn-default" href="../">cancle</a>
+            </div>
+       </form>
+    </div>
+</div>
+
+
+{% endblock%}

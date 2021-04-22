@@ -1,0 +1,392 @@
+{% extends 'base.html' %}
+{%load static%}
+<!--{% load crispy_forms_tags %}-->
+
+
+{%block titlebar%}
+  <title>update product</title>
+{%endblock%}
+
+
+{% block page-head %}
+   Product Page
+{% endblock %}
+
+{% block breadcrumb %}
+   Product page
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css'%}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block wrapper%}
+
+<div class="col-md-12">
+    <div class="card card-primary">
+      <form method="post" action="{% url 'custom_admin:UpdateProduct' id %}" enctype="multipart/form-data" id="ProductAttributeAssocForm" data-attribute-url="{% url 'custom_admin:ajax_load_product_attribute_value' %}" novalidate>
+           <div class="card-body row">
+               {% csrf_token %}
+
+                  <div class="col-sm-6">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.name.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.name.label_tag }}{% if form.name.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.name.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.name.help_text|safe }}</p>
+                        </div>
+
+                    </div>
+
+                     <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.status.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.status.label_tag }}{% if form.status.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.status }}
+
+                            {% if form.status.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.status.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.status.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.product_categories.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.product_categories.label_tag }}{% if form.product_categories.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.product_categories }}
+
+                            {% if form.product_categories.errors %}
+                                <div class="col-sm-6">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.product_categories.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.product_categories.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-4">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.short_description.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.short_description.label_tag }}{% if form.short_description.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.short_description }}
+
+                            {% if form.short_description.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.short_description.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.short_description.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-8">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.lond_description.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.lond_description.label_tag }}{% if form.lond_description.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.lond_description }}
+
+                            {% if form.lond_description.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.lond_description.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.lond_description.help_text|safe }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.price.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.price.label_tag }}{% if form.price.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.price }}
+
+                            {% if form.price.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.price.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.price.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.special_price.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.special_price.label_tag }}{% if form.special_price.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.special_price }}
+
+                            {% if form.special_price.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.special_price.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.special_price.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.special_price_from.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.special_price_from.label_tag }}{% if form.special_price_from.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.special_price_from }}
+
+                            {% if form.special_price_from.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.special_price_from.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.special_price_from.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.special_price_to.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.special_price_to.label_tag }}{% if form.special_price_to.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.special_price_to }}
+
+                            {% if form.special_price_to.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.special_price_to.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.special_price_to.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.is_featured.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.is_featured.label_tag }}{% if form.is_featured.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.is_featured }}
+
+                            {% if form.is_featured.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.is_featured.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.is_featured.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class=" form-group is-invalid" aria-required={% if form.quantity.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.quantity.label_tag }}{% if form.quantity.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.quantity }}
+
+                            {% if form.quantity.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.quantity.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.quantity.help_text|safe }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.meta_title.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.meta_title.label_tag }}{% if form.meta_title.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.meta_title }}
+
+                            {% if form.meta_title.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.meta_title.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.meta_title.help_text|safe }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.meta_description.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.meta_description.label_tag }}{% if form.meta_description.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.meta_description }}
+
+                            {% if form.meta_description.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.meta_description.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.meta_description.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+
+                        <div class=" form-group is-invalid" aria-required={% if form.meta_keywords.field.required %}"true"{% else %}"false"{% endif %}>
+                            {{ form.meta_keywords.label_tag }}{% if form.meta_keywords.field.required %}<span class="required">*</span>{% endif %}
+
+                            {{ form.meta_keywords }}
+
+                            {% if form.meta_keywords.errors %}
+                                <div class="col-sm-12">
+                                    <strong id="passwordHelp" class="text-danger">
+                                {{ form.meta_keywords.errors }}
+                                    </strong>
+                                </div>
+                             {% endif %}
+
+                            <p class="help">{{ form.meta_keywords.help_text|safe }}</p>
+                        </div>
+                    </div>
+
+
+
+                <table class="table">
+                   {{ formset.management_form }}
+                   {% for form in formset.forms %}
+                       {% if forloop.first %}
+                       <thead>
+                         <tr>
+                            {% for field in form.visible_fields %}
+                                <th>{{ field.label|capfirst }}</th>
+                            {% endfor %}
+                         </tr>
+                       </thead>
+                       {% endif %}
+
+                        <tr class="formset_row">
+
+                            {% for field in form.visible_fields %}
+                                <td>
+                                    {# Include the hidden fields in the form #}
+                                    {% if forloop.first %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {{ field.errors.as_ul }}
+                                    {{ field }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                   {% endfor %}
+               </table>
+
+              <table class="table">
+                   {{ formset2.management_form }}
+                   {% for form in formset2.forms %}
+                       {% if forloop.first %}
+                       <thead>
+                         <tr>
+                            {% for field in form.visible_fields %}
+                                <th>{{ field.label|capfirst }}</th>
+                            {% endfor %}
+                         </tr>
+                       </thead>
+                       {% endif %}
+
+                        <tr class="formset_row2">
+
+                            {% for field in form.visible_fields %}
+                                <td>
+                                    {# Include the hidden fields in the form #}
+                                    {% if forloop.first %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {{ field.errors.as_ul }}
+                                    {{ field }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                   {% endfor %}
+               </table>
+
+
+           </div>
+            <div class="card-footer">
+               <button type="submit" class="btn btn-primary">submit</button>
+               <a  class="btn btn-default" href="{% url 'custom_admin:product_list' %}">cancle</a>
+
+            </div>
+
+       </form>
+    </div>
+</div>
+
+
+{% endblock%}
+{%block extra%}
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
+<!--<script src="{% static 'formset/jquery.formset.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+        integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
+
+<script src="{% static 'custom_admin/product_form.js' %}"></script>
+
+{% endblock%}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{%load static%}
+
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+          {%block titlebar%}
+
+            <title>AdminLTE 3 | Starter</title>
+
+          {%endblock%}
+
+        <!-- Font Awesome Icons -->
+        <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+        {% block links%}
+
+        {% endblock%}
+
+        <!-- Google Font: Source Sans Pro -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+  </head>
+
+  <body class="hold-transition sidebar-mini">
+      <div class="wrapper">
+
+        <!-- Navbar -->
+        {% include 'header.html'%}
+        <!-- Main Sidebar Container -->
+        {% include 'side_navbar.html'%}
+
+
+      <div class="content-wrapper">
+          <div class="content-header">
+              <div class="container-fluid">
+                <div class="row mb-2">
+                  <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{% block page-head %}Starter Page{% endblock %}</h1>
+                  </div><!-- /.col -->
+                  <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                      <li class="breadcrumb-item"><a href="#">Home</a></li>
+                      <li class="breadcrumb-item active">{% block breadcrumb%}Starter Page{% endblock %}</li>
+                    </ol>
+                  </div><!-- /.col -->
+                </div><!-- /.row -->
+              </div><!-- /.container-fluid -->
+          </div>
+    <!-- /.content-header -->
+
+          <div class="container" >
+
+            {%if messages %}
+			 {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible alert-fixed" role="alert" >
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          {% block wrapper%}
+
+
+
+           {% endblock %}
+
+      </div>
+
+        {% include 'footer.html' %}
+
+      <!-- REQUIRED SCRIPTS -->
+
+      <!-- jQuery -->
+      <script src="{%static 'plugins/jquery/jquery.min.js'%}"></script>
+      <!-- Bootstrap 4 -->
+      <script src="{%static 'plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+      <!-- AdminLTE App -->
+      <script src="{%static 'dist/js/adminlte.min.js'%}"></script>
+
+           <script type="text/javascript">
+               $(".alert-dismissible").fadeTo(4000, 500).slideUp(500, function(){
+                    $(".alert-dismissible").alert('close');
+                });
+            </script>
+      {%block extra%}
+
+      {% endblock %}
+  </body>
+</html>

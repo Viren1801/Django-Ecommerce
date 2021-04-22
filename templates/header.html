@@ -1,0 +1,57 @@
+ <!-- Navbar -->
+ {%load static%}
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'custom_admin:index' %}" class="nav-link">Home</a>
+      </li>
+
+    </ul>
+
+
+
+    <ul class="navbar-nav ml-auto">
+      <!-- Messages Dropdown Menu -->
+<!--        <a href="{% url 'custom_admin:UserChangePsw' %}"  role="button">change password  &nbsp; </a>-->
+<!--       <a href="{% url 'custom_admin:UserChange' %}"  role="button">change detail &nbsp; </a>-->
+<!--      <span><a href="{% url 'custom_admin:logout' %}" class="btn btn-info" role="button">Log out</a></span>-->
+
+         <li class="nav-item dropdown ">
+
+            <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+              <i class="fa fa-user"> Account</i>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right ">
+              <span class="dropdown-item dropdown-header"> Account </span>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="{% url 'custom_admin:UserChange' %}" class="dropdown-item">
+                <i class="fas fa-user-edit"></i> &nbsp; Change Detail
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="{% url 'custom_admin:UserChangePsw' %}" class="dropdown-item">
+                <i class="fas fa-key "></i> &nbsp; Change Password
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="{% url 'custom_admin:logout' %}" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i> &nbsp; Logout
+              </a>
+
+          </li>
+
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+ 
+ 

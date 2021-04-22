@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{%load static%}
+{% load auth_extras %}
+
+
+{% block links %}
+
+{% endblock %}
+
+{%block titlebar%}
+  <title>Product</title>
+ <style>
+
+  </style>
+{%endblock%}
+
+{% block page-head %}
+   Product Page
+{% endblock %}
+
+{% block breadcrumb %}
+   Product page
+{% endblock %}
+
+
+
+
+
+
+
+{% block wrapper%}
+
+<!--<div class="bs-example">-->
+<!--    &lt;!&ndash; Button HTML (to Trigger Modal) &ndash;&gt;-->
+<!--    <a href="#myModal" role="button" class="btn btn-lg btn-primary" data-toggle="modal">Launch Demo Modal</a>-->
+
+    <!-- Modal HTML -->
+
+<!--</div>-->
+
+<section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+
+            <div class="card-header">
+
+                <div class="col-12">
+                       <a href="{% url 'custom_admin:AddProduct'%}" class=" btn btn-primary float-right">
+                       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                       <span><strong>Add +</strong></span>
+                       </a>
+                </div>
+                <h3 class="card-title">Product table</h3>
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table class="datatable table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>created_by</th>
+                  <th>created_date</th>
+                  <th>modified_by</th>
+                  <th>modified_date</th>
+                  <th>status</th>
+                  <th style="min-width:110px">Action</th>
+                </tr>
+
+
+                </thead>
+                <tbody>
+
+
+
+                </tbody>
+              </table>
+
+
+
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+      </div>
+  </div>
+</section>
+
+
+{% endblock%}
+
+{%block extra%}
+<!-- DataTables -->
+
+
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/r-2.2.5/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/r-2.2.5/datatables.min.js"></script>
+
+<!-- AdminLTE for demo purposes -->
+
+<script>
+
+$(document).ready(function() {
+
+    var dt_table = $('.datatable').dataTable({
+
+        language: dt_language,  // global variable defined in html
+        order: [[ 0, "desc" ]],
+        lengthMenu: [[25, 50, 100, 200], [25, 50, 100, 200]],
+        columnDefs: [
+
+          {targets: [-1], orderable: false, searchable: false},
+          {targets: [-2], orderable: false, searchable: false}
+
+        ],
+         searching: true,
+        processing: true,
+        responsive: false,
+        serverSide: true,
+        autoWidth : false,
+        stateSave: true,
+        scrollY:     300,
+        scrollX:     true,
+        ajax: TESTMODEL_LIST_JSON_URL
+    });
+});
+
+</script>
+
+<script type="text/javascript">
+
+var TESTMODEL_LIST_JSON_URL = '{% url "custom_admin:product_list_json" %}';
+
+        // translations for datatables
+        var dt_language = {
+
+            "emptyTable":     "No data available in table",
+            "info":           "Showing _START_ to _END_ of _TOTAL_ entries",
+            "infoEmpty":      "Showing 0 to 0 of 0 entries",
+            "infoFiltered":   "(filtered from _MAX_ total entries)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Show _MENU_ entries",
+            "loadingRecords": "Loading...",
+            "processing":     "Processing...",
+            "search":         "Search:",
+            "zeroRecords":    "No matching records found",
+            "paginate": {
+                "first":      "First",
+                "last":       "Last",
+                "next":       "Next",
+                "previous":   "Previous"
+            },
+            "aria": {
+
+                "sortAscending":  ": activate to sort column ascending" ,
+                "sortDescending": ": activate to sort column descending"
+
+            }
+        }
+
+</script>
+
+
+{%endblock%}
