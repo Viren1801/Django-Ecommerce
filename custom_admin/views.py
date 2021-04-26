@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -10,7 +11,9 @@ from django.db import IntegrityError, transaction
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from .forms import UserForm,ChangeDetailForm,OldPassForm,UserUpdateForm
+from .forms import UserForm,ChangeDetailForm,OldPassForm,UserUpdateForm,CategoryForm
+
+from custom_admin.models import Category
 
 from django.forms import inlineformset_factory
 
@@ -19,7 +22,7 @@ from .models import User
 
 # Create your views here.
 @login_required(login_url='custom_admin:login')
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin','category_manager'])
 def index(request):
     return render(request, 'custom_admin/starter.html')
 
@@ -34,10 +37,10 @@ def login(request):
 
         user = authenticate(request, username=username, password=password)
 
-        groups = user.groups.values_list('name',flat = True)
+        groups = request.user.groups.values_list('name',flat = True)
         if user is not None and valuenext == '':
 
-            if 'admin' in groups or user.is_superuser:
+            if 'admin' or 'category_manager' in groups or user.is_superuser :
                 auth_login(request, user)
                 messages.success(request, 'you are logged in')
                 return redirect('custom_admin:index')
@@ -45,7 +48,7 @@ def login(request):
                 messages.warning(request, 'you are not authorized for it')
         elif user is not None and valuenext != '':
 
-            if 'admin' in groups or user.is_superuser:
+            if 'admin' or 'category_manager' in groups or user.is_superuser:
                 auth_login(request, user)
                 return redirect(valuenext)
             else:
@@ -179,3 +182,84 @@ def UserDelete(request, id):
         messages.warning(request, "user cant deleted because of integrity")
 
     return redirect('custom_admin:UserList')
+
+#------------------------------------------category--------------------------------------------------
+
+@login_required(login_url='custom_admin:login')
+def category(request):
+
+	categories=Category.objects.all()
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(categories, 4)
+	try:
+		categories = paginator.page(page)
+	except PageNotAnInteger:
+		categories = paginator.page(1)
+	except EmptyPage:
+		categories = paginator.page(paginator.num_pages)
+
+	if request.method == 'POST':
+		page_n = request.POST.get('page_n', None)  # getting page number
+		categories1 = paginator.page(page_n).object_list
+
+		categories  =serializers.serialize('json',categories1)
+
+		categories = list(paginator.page(page_n).object_list.values('id','name','parent','created_date',
+															'modify_date'))
+		return JsonResponse(categories,content_type='application/json',safe=False)
+
+	return render(request, 'custom_admin/category.html',{'categories':categories})
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin','category_manager'])
+def category_add(request):
+    if request.method == 'POST':
+
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.created_by = request.user
+            instance.modify_by = request.user
+            instance.save()
+            messages.success(request, "category added succesfully")
+            return redirect('custom_admin:category_test')
+    else:
+        form = CategoryForm()
+    return render(request, 'custom_admin/category_add.html', {'form': form, })
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin','category_manager'])
+def category_update(request, id):
+    instance = get_object_or_404(Category, id=id)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=instance)
+        # print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.modify_by = request.user
+            instance.save()
+            messages.success(request, "category updated successfuly")
+            return redirect('custom_admin:category_test')
+    else:
+        form = CategoryForm(instance=instance)
+
+    return render(request, 'custom_admin/category_update.html', {'form': form, 'id': id})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin','category_manager'])
+def category_delete(request, id):
+    data = get_object_or_404(Category, id=id)
+    try:
+        data.delete()
+        messages.success(request, "category deleted succesfully")
+    except IntegrityError:
+        messages.warning(request, "category have child value or product so cant delete")
+
+    return redirect('custom_admin:category_test')
+
+@method_decorator(login_required(login_url='custom_admin:login'), name='dispatch')
+class CategoryList(TemplateView):
+    template_name = 'custom_admin/list/category_test.html'

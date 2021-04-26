@@ -1,4 +1,5 @@
 from django import forms
+from .models import Category
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
 
@@ -8,7 +9,7 @@ class UserForm(UserCreationForm):
         User = get_user_model()
         model = User
         # fields = '__all__'
-        fields = ('email','first_name','last_name','groups','is_active','password1','password2','is_staff')
+        fields = ('email','first_name','last_name','groups','user_permissions','is_active','password1','password2','is_staff')
 
 
 
@@ -91,3 +92,16 @@ class OldPassForm(forms.Form):
         self.fields['old_password'].widget.attrs['class'] = 'form-control'
         self.fields['old_password'].widget.attrs['placeholder'] = 'old_password'
         self.fields['old_password'].widget.attrs['autocomplete'] = 'off'
+
+
+class CategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ('name','status','parent')
+        widgets = {
+
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'parent': forms.Select(attrs={'class': 'form-control'}),
+
+        }

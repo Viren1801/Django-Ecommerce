@@ -25,3 +25,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = []
+
+class Category(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=100, null=True,unique=True)
+	parent = models.ForeignKey('self',on_delete=models.DO_NOTHING,null=True,blank=True)
+	created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.DO_NOTHING,related_name='catagory_created_by',default='',null=True,blank=True)
+	created_date = models.DateField(auto_now_add=True)
+	modify_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.DO_NOTHING,related_name='catogory_modify_by',default='',null=True,blank=True)
+	modify_date = models.DateField(auto_now=True)
+	status=models.BooleanField()
+
+	class meta:
+		ordering = ['-created_date']
+		verbose_name = 'Category'
+		verbose_name_plural = 'Categories'
+
+	def __str__(self):
+		full_path = [self.name]
+		p = self.parent
+		while p is not None:
+			full_path.append(p.name)
+			p= p.parent
+		return (' -> '.join(full_path[::-1]))

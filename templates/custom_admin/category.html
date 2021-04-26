@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{%load static%}
+{% load auth_extras %}
+
+
+{% block links %}
+
+{% endblock %}
+
+{%block titlebar%}
+  <title>add category</title>
+{%endblock%}
+
+{% block page-head %}
+   Category Page
+{% endblock %}
+
+{% block breadcrumb %}
+   Category page
+{% endblock %}
+
+
+
+
+
+
+
+{% block wrapper%}
+
+<!--<div class="bs-example">-->
+<!--    &lt;!&ndash; Button HTML (to Trigger Modal) &ndash;&gt;-->
+<!--    <a href="#myModal" role="button" class="btn btn-lg btn-primary" data-toggle="modal">Launch Demo Modal</a>-->
+
+    <!-- Modal HTML -->
+
+<!--</div>-->
+
+<section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+
+            <div class="card-header">
+
+                <div class="col-12">
+                    {% if request.user|has_group:"admin" or request.user|has_group:"category_manager" %}
+                       <a href="{% url 'custom_admin:AddCategory'%}" class=" btn btn-primary float-right">
+                       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                       <span><strong>Add +</strong></span>
+                       </a>
+                   {% endif %}
+                </div>
+                <h3 class="card-title">category table</h3>
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-hover datatable">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>parent</th>
+                  <th>created by</th>
+                  <th>created date</th>
+                  <th>modify by</th>
+                  <th>modify date</th>
+                  <th>status</th>
+                  <th>edit/delete</th>
+                </tr>
+                </thead>
+                <tbody id="posts">
+
+	                {%for category in categories %}
+		                <tr>
+		                  <td>{{ category.id }}</td>
+		                  <td>{{ category }}</td>
+                          <td>{{ category.parent }}</td>
+		                  <td>{{ category.created_by.get_full_name }}</td>
+		                  <td>{{ category.created_date }}</td>
+		                  <td>{{ category.modify_by.get_full_name }}</td>
+		                  <td>{{ category.modify_date }}</td>
+		                  <td>{% if  category.status == True %}<i class="fa fa-check" aria-hidden="true"></i>{% else %}
+                          <i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+
+                           <td>
+
+                               <a href="{% url 'custom_admin:UpdateCategory' category.id %}" class="btn btn-primary ">
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+
+                                </a>
+                                 <a href="#myModal-{{category.id}}" class="btn btn-danger" data-toggle="modal">
+                                     <i class="fa fa-trash"></i>
+                                 </a>
+
+                                <div id="myModal-{{category.id}}" class="modal fade" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirmation</h5>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Do you want to delete category?</p>
+<!--                                                <p class="text-secondary"><small>If you don't save, your changes will be lost.</small></p>-->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <a type="button" class="btn btn-danger" href="{% url 'custom_admin:CategoryDelete' category.id %}" >Confirm</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                           </td>
+
+
+		                </tr>
+	                {%endfor%}
+
+                </tbody>
+              </table>
+                <br>
+                <nav aria-label="Page navigation example">
+                {% if categories.has_other_pages %}
+                  <ul class="pagination justify-content-end">
+
+                    {% if categories.has_previous %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page={{ categories.previous_page_number }}" tabindex="-1">Previous</a>
+                      </li>
+                    {% else %}
+                      <li class="page-item disabled">
+                          <span class="page-link">Previous</span>
+                      </li>
+                    {% endif %}
+
+                        {% for i in categories.paginator.page_range %}
+                            {% if categories.number == i %}
+                                <li class="page-item active"><a class="page-link" href="?page={{ i }}" data-page = "{{ i }}" > {{ i }} </a></li>
+                            {% else %}
+                                <li class="page-item "><a class="page-link get-page" data-action="{{ i }}"  >{{ i }}</a></li>
+                            {% endif %}
+
+                        {% endfor %}
+                    {% if categories.has_next %}
+                      <li class = "page-item"><a  class="page-link  " href="?page={{ categories.next_page_number }}">Next</a></li>
+                    {% else %}
+                      <li class = "page-item disabled"><span class="page-link">Next</span></li>
+                    {% endif %}
+
+                  </ul>
+                {% endif %}
+                </nav>
+
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+      </div>
+  </div>
+</section>
+
+
+{% endblock%}
+
+{%block extra%}
+<!-- DataTables -->
+
+
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+
+
+
+
+
+
+
+{%endblock%}

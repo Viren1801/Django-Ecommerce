@@ -1,5 +1,7 @@
  <!-- Main Sidebar Container -->
  {%load static%}
+ {% load auth_extras %}
+
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
         <a href="#" class="brand-link">
@@ -39,6 +41,15 @@
                        <i class="nav-icon fas fa-user-friends "></i>
                        <p>
                         Users
+                       </p>
+                     </a>
+                </li>
+
+                <li class="nav-item">
+                     <a href="{% url 'custom_admin:category_test'%}" class="nav-link {% if request.resolver_match.url_name == "category_test" %}active{% endif %}">
+                       <i class="nav-icon fa fa-list-alt "></i>
+                       <p>
+                        category
                        </p>
                      </a>
                 </li>
