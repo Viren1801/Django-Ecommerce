@@ -54,6 +54,42 @@
                      </a>
                 </li>
 
+                <li class="nav-item has-treeview  {% if request.resolver_match.url_name == "product_list" %}menu-open{% endif %}
+            {% if request.resolver_match.url_name == "ProductAttribute" %}menu-open{% endif %}
+            {% if request.resolver_match.url_name == "ProductAttributeValue" %}menu-open{% endif %}">
+
+            <a href="#" class="nav-link  {% if request.resolver_match.url_name == "product_list" %}active{% endif %}
+            {% if request.resolver_match.url_name == "ProductAttribute" %}active{% endif %}
+            {% if request.resolver_match.url_name == "ProductAttributeValue" %}active{% endif %}" >
+            <i class="nav-icon fas fa-table"></i>
+            <p>product<i class="fas fa-angle-left right"></i></p>
+            </a>
+
+            <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                    <a href="{% url 'custom_admin:product_list' %}" class="nav-link {% if request.resolver_match.url_name == "product_list" %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Products </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'custom_admin:ProductAttribute' %}" class="nav-link {% if request.resolver_match.url_name == "ProductAttribute" %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Product Attribute</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'custom_admin:ProductAttributeValue' %}" class="nav-link {% if request.resolver_match.url_name == "ProductAttributeValue" %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Product Attribute Value </p>
+                    </a>
+                </li>
+            </ul>
+            </li>
+
 
         </ul>
       </nav>

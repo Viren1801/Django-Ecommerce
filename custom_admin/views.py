@@ -11,9 +11,9 @@ from django.db import IntegrityError, transaction
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from .forms import UserForm,ChangeDetailForm,OldPassForm,UserUpdateForm,CategoryForm
+from .forms import UserForm,ChangeDetailForm,OldPassForm,UserUpdateForm,CategoryForm,ProductAttributeForm,ProductAttributeValueForm,ProductImageForm,ProductAttributeAssocForm,ProductForm
 
-from custom_admin.models import Category
+from custom_admin.models import Category,ProductAttribute,ProductAttributeValues,Product,ProductImage, ProductAttributeAssoc
 
 from django.forms import inlineformset_factory
 
@@ -263,3 +263,262 @@ def category_delete(request, id):
 @method_decorator(login_required(login_url='custom_admin:login'), name='dispatch')
 class CategoryList(TemplateView):
     template_name = 'custom_admin/list/category_test.html'
+
+
+
+
+# ------------------------------------------product attribute--------------------------------------------------
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def Product_Attribute(request):
+    product_attributes = ProductAttribute.objects.all()
+
+    return render(request, 'attribute/product_attribute.html', {'product_attributes': product_attributes})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def ProductAttribute_add(request):
+    if request.method == 'POST':
+        # import pdb
+        # pdb.set_trace()
+        form = ProductAttributeForm(request.POST)
+        # print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.created_by = request.user
+            instance.modify_by = request.user
+            instance.save()
+            # form.save_m2m()
+            messages.success(request, "product attribute  added succesfully")
+            return redirect('custom_admin:ProductAttribute')
+    else:
+        form = ProductAttributeForm()
+    return render(request, 'attribute/product_attribute_add.html', {'form': form, })
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product_attribute_update(request, id):
+    instance = get_object_or_404(ProductAttribute, id=id)
+    if request.method == 'POST':
+        form = ProductAttributeForm(request.POST, instance=instance)
+        # print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.modify_by = request.user
+            instance.save()
+            # form.save_m2m()
+            messages.success(request, "product attribute updated successfuly")
+            return redirect('custom_admin:ProductAttribute')
+
+    else:
+        form = ProductAttributeForm(instance=instance)
+
+    return render(request, 'attribute/product_attribute_update.html', {'form': form, 'id': id})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product_attribute_delete(request, id):
+    data = get_object_or_404(ProductAttribute, id=id)
+    try:
+        data.delete()
+        messages.success(request, "product attribute deleted succesfully")
+    except IntegrityError:
+        messages.warning(request, "product attribute have products so cant delete")
+
+    return redirect('custom_admin:ProductAttribute')
+
+
+# ------------------------------------------product attribute value--------------------------------------------------
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def Product_Attribute_Value(request):
+    product_attribute_values = ProductAttributeValues.objects.all()
+
+    return render(request, 'attribute/product_attribute_value.html',
+                  {'product_attribute_values': product_attribute_values})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def ProductAttributeValue_add(request):
+    if request.method == 'POST':
+        form = ProductAttributeValueForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.created_by = request.user
+            instance.modify_by = request.user
+            instance.save()
+            # form.save_m2m()
+            messages.success(request, "product attribute value  added succesfully")
+            return redirect('custom_admin:ProductAttributeValue')
+
+    form = ProductAttributeValueForm()
+    return render(request, 'attribute/product_attribute_value_add.html', {'form': form, })
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def ProductAttributeValue_update(request, id):
+    instance = get_object_or_404(ProductAttributeValues, id=id)
+    if request.method == 'POST':
+        form = ProductAttributeValueForm(request.POST, instance=instance)
+        print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.modify_by = request.user
+            instance.save()
+            # form.save_m2m()
+            messages.success(request, "product attribute value updated successfuly")
+            return redirect('custom_admin:ProductAttributeValue')
+
+
+    else:
+        form = ProductAttributeValueForm(instance=instance)
+
+    return render(request, 'attribute/product_attribute_value_update.html', {'form': form, 'id': id})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def ProductAttributeValue_delete(request, id):
+    data = get_object_or_404(ProductAttributeValues, id=id)
+    try:
+        data.delete()
+        messages.success(request, "product attribute deleted succesfully")
+    except IntegrityError:
+        messages.warning(request, "product attribute have products so cant delete")
+
+    return redirect('custom_admin:ProductAttributeValue')
+
+
+# ------------------------------------------product--------------------------------------------------
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product(request):
+	products=Product.objects.all()
+	return render(request, 'custom_admin/product.html',{'products':products})
+
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product_add(request):
+    ProductImageFormset = inlineformset_factory(Product, ProductImage, form=ProductImageForm, extra=1)
+    ProductAttributeFormset = inlineformset_factory(Product, ProductAttributeAssoc, form=ProductAttributeAssocForm,
+                                                    extra=1)
+
+    if request.method == 'POST':
+
+        form = ProductForm(request.POST)
+        formset = ProductImageFormset(request.POST, request.FILES)
+        formset2 = ProductAttributeFormset(request.POST)
+
+        if form.is_valid() and formset.is_valid() and formset2.is_valid():
+            with transaction.atomic():
+                instance = form.save(commit=False)
+                instance.created_by = request.user
+                instance.modify_by = request.user
+                instance.save()
+                form.save_m2m()
+
+                for image in formset:
+                    if image.is_valid():
+                        image = image.save(commit=False)
+                        image.product = instance
+                        image.save()
+
+                for attribute in formset2:
+                    if attribute.is_valid() and attribute.has_changed():
+                        attribute = attribute.save(commit=False)
+                        attribute.product_id = instance
+                        attribute.save()
+
+                messages.success(request, "product added succesfully")
+            return redirect('custom_admin:product_list')
+
+    else:
+        form = ProductForm(request.GET or None)
+        formset2 = ProductAttributeFormset()
+        formset = ProductImageFormset()
+
+    return render(request, 'custom_admin/product_add.html', {'form': form, 'formset2': formset2, 'formset': formset})
+
+
+def load_product_attribute_value(request):
+    product_attribute_id = request.GET.get('product_attribute_id')
+    print(product_attribute_id)
+    product_attribute_value_ids = ProductAttributeValues.objects.filter(attribute_name=product_attribute_id)
+    return render(request, 'attribute/ajax/product_attribute_list_options.html',
+                  {'product_attribute_value_ids': product_attribute_value_ids})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product_update(request, id):
+    product = get_object_or_404(Product, id=id)
+    ProductImageFormset = inlineformset_factory(Product, ProductImage, form=ProductImageForm, extra=1)
+    ProductAttributeFormset = inlineformset_factory(Product, ProductAttributeAssoc, form=ProductAttributeAssocForm,
+                                                    extra=1)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        formset = ProductImageFormset(request.POST, request.FILES, instance=product)
+        formset2 = ProductAttributeFormset(request.POST, instance=product)
+
+        if form.is_valid() and formset.is_valid() and formset2.is_valid():
+            with transaction.atomic():
+                # import pdb
+                # pdb.set_trace()
+                instance = form.save(commit=False)
+                instance.modify_by = request.user
+                instance.save()
+                form.save_m2m()
+                formset2.save()
+
+                for image in formset:
+                    if image.is_valid() and image.has_changed():
+                        image = image.save(commit=False)
+                        image.product = instance
+                        image.save()
+
+                instance2 = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+
+                instance3 = formset2.save(commit=False)
+                for obj in formset2.deleted_objects:
+                    obj.delete()
+
+                messages.success(request, "product edited succesfully")
+            return redirect('custom_admin:product_list')
+
+    else:
+
+        form = ProductForm(request.GET or None, instance=product)
+        formset2 = ProductAttributeFormset(instance=product)
+        formset = ProductImageFormset(instance=product)
+
+    return render(request, 'custom_admin/product_update.html',
+                  {'form': form, 'formset2': formset2, 'formset': formset, 'id': id})
+
+
+@login_required(login_url='custom_admin:login')
+@allowed_users(allowed_roles=['admin'])
+def product_delete(request, id):
+    data = get_object_or_404(Product, id=id)
+    try:
+        data.delete()
+        messages.success(request, "product deleted succesfully")
+    except IntegrityError:
+        messages.warning(request, "product cant delete")
+
+    return redirect('custom_admin:product_list')
+
+@method_decorator(login_required(login_url='custom_admin:login'), name='dispatch')
+class ProductList(TemplateView):
+    template_name = 'custom_admin/list/product_list.html'

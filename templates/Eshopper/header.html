@@ -1,0 +1,116 @@
+{%  load static %}
+<header id="header"><!--header-->
+		<div class="header_top"><!--header_top-->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="contactinfo">
+							<ul class="nav nav-pills">
+								<li><a href="#"><i class="fa fa-phone"></i> {{ info_contact_no }}</a></li>
+								<li><a href="#"><i class="fa fa-envelope"></i> {{ info_email }}</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="social-icons pull-right">
+							<ul class="nav navbar-nav">
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/header_top-->
+
+		<div class="header-middle"><!--header-middle-->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="logo pull-left">
+							<a href="{% url 'Home:index' %}"><img src="{% static 'Eshopper/images/home/logo.png' %}" alt="" /></a>
+						</div>
+
+					</div>
+					{% block nav-header %}
+					<div class="col-sm-8">
+						<div class="shop-menu pull-right">
+							<ul class="nav navbar-nav">
+
+
+
+<!--								{% if  request.user.is_authenticated %}-->
+<!--								<li class="dropdown"><a href="#"><i class="fa fa-user"></i> Account-->
+<!--									<i class="fa fa-angle-down"></i></a>-->
+<!--                                    <ul role="menu" class="dropdown-menu">-->
+<!--										<li><a href="{% url 'Home:Account' %}"> My Account </a></li>-->
+<!--										<li><a href="{% url 'Home:AddressList' %}"> My Address Book </a></li>-->
+<!--                                    </ul>-->
+<!--                                </li>-->
+<!--								{% endif %}-->
+
+								<li><a href="{% url 'Home:CartDetail' %}"><i class="fa fa-shopping-cart">
+								</i> Cart <span class="label label-info" id="cart_value">  {{ cart_len }}<span></a></li>
+								{% if request.user.is_authenticated%}
+								<li><a href="{% url 'Home:WishList' %}"><i class="fa fa-star"></i> Wishlist
+									<span class="label label-info" id="wishlist_value">  {{ wishlist_len }}<span> </a></li>
+								{% else %}
+								<li><a href="{% url 'Home:login' %}"><i class="fa fa-lock"></i> Login/Register </a></li>
+								{% endif %}
+
+								{% if  request.user.is_authenticated %}
+									<li>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
+												<i class="fa fa-user"></i> Account
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="{% url 'Home:Account' %}"> My Account </a></li>
+												<li><a href="{% url 'Home:AddressList' %}"> My Address Book </a></li>
+												<li><a href="{% url 'Home:logout' %}"><i class="fa fa-lock"></i> Logout</a></li>
+
+											</ul>
+									    </div>
+									</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+					{% endblock %}
+				</div>
+			</div>
+		</div><!--/header-middle-->
+
+		<div class="header-bottom"><!--header-bottom-->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9">
+
+						<div class="mainmenu pull-left">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a href="{% url 'Home:index' %}" class="{% if request.resolver_match.url_name == "index"%}
+									active{% endif %}">Home</a></li>
+								<li class="dropdown"><a href="">Order<i class="fa fa-angle-down"></i></a>
+                                    <ul role="menu" class="sub-menu">
+										<li><a href="{% url 'Home:Checkout' %}"> Checkout </a></li>
+										<li><a href="{% url 'Home:TrackMyOrder' %}">Track My Order</a></li>
+										{% if request.user.is_authenticated %}
+										<li><a href="{% url 'Home:MyOrder' %}">My Orders</a></li>
+										{% endif %}
+                                    </ul>
+                                </li>
+
+								<li><a href="{% url 'Home:ContactUs' %}"  class="{% if request.resolver_match.url_name == "ContactUs"%}
+									active{% endif %}">Contact Us</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div><!--/header-bottom-->
+	</header><!--/header-->

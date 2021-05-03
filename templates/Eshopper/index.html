@@ -1,0 +1,302 @@
+{% extends 'Eshopper/base.html' %}
+{% load static %}
+
+{% block meta %}
+
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section id="slider"><!--slider-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							{% for banner in banners%}
+							<li data-target="#slider-carousel" data-slide-to="{{ forloop.counter }}" {% if forloop.first %}class="active" {% endif %}></li>
+							{% endfor %}
+						</ol>
+
+						<div class="carousel-inner">
+							{% for banner in banners %}
+							<div class="item {% if forloop.first %}active{% endif %}">
+								<div class="col-sm-6">
+									<h1>{{banner.banner_list}}</h1>
+									<h2>{{banner.banner_name}}</h2>
+									<p>{{banner.description}} </p>
+<!--									<button type="button" class="btn btn-default get">Get it now</button>-->
+
+								</div>
+								<div class="col-sm-6">
+									<img src="{{banner.image.url}}" class="girl img-responsive" style="max-width:484px;max-height:425px;min-width:484px;min-he	ight:425px;" alt="" />
+								</div>
+							</div>
+
+							{% endfor %}
+
+						</div>
+
+
+						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+							<i class="fa fa-angle-left"></i>
+						</a>
+						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+							<i class="fa fa-angle-right"></i>
+						</a>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</section><!--/slider-->
+
+
+<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>Category</h2>
+
+
+						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+
+							{% for category in categories %}
+
+							<div class="panel panel-default">
+								{% if category.parent == Null %}
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a href="{% url 'Home:CategoryItem' category.id %}" class="category-call" data-category="{{ category.id }}" >
+
+										   {% for child in categories %}
+												{% if child.parent == category %}
+													{% ifchanged %}
+													<a data-toggle="collapse" data-parent="#accordian"  href="#{{ category.name }}">
+													<span class="badge pull-right"><i class="fa fa-plus"></i></span>
+													{% endifchanged %}
+												{% endif%}
+										   {% endfor %}
+
+											{{ category.name }}
+										</a>
+									</h4>
+
+								</div>
+
+
+								<div id="{{ category.name }}" class="panel-collapse collapse">
+									<div class="panel-body">
+										<ul>
+
+											{% for child in categories %}
+											{% if child.parent == category %}
+
+											<li><a href="{% url 'Home:CategoryItem' category.id %}" class="category-call" data-category="{{ child.id }}">{{ child.name }} </a></li>
+											{% endif%}
+											{% endfor %}
+
+											<li><a href="{% url 'Home:CategoryItem' category.id %}" class="category-call" data-category="{{ category.id }}"> All {{ category.name }} </a></li>
+										</ul>
+									</div>
+								</div>
+
+
+
+								{% endif %}
+
+							</div>
+
+							{% endfor %}
+
+
+						</div><!--/category-products-->
+
+
+						<div class="price-range"><!--price-range-->
+							<h2>Price Range</h2>
+							<div class="well text-center">
+								 <input type="text" class="span2 price-filter" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
+								 <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
+<!--								<button type="button" class="btn btn-primary price-filter-button">filter</button>-->
+							</div>
+						</div><!--/price-range-->
+
+
+
+					</div>
+
+				</div>
+
+
+
+				<div class="col-sm-9 padding-right">
+					<div class="features_items"  id="category-new-data" ><!--features_items-->
+
+						<h2 class="title text-center">Products</h2>
+
+						{% for product in products %}
+
+							<div class="col-sm-4">
+								<div class="product-image-wrapper">
+									<div class="single-products">
+											<div class="productinfo text-center">
+												<img src="{{product.product_image.first.image_name.url }}" alt="" style="max-width:255.48px;min-width:255.48px;max-height:245px;min-height:245px;" />
+												{% if product.special_price_test %}
+
+														<h2 ><span style="text-decoration: line-through; color:black;">${{product.price}}</span>${{product.special_price}}</h2>
+
+												{% else %}
+
+														<h2>${{product.price}}</h2>
+
+												{% endif %}
+												<p>{{product.name}}</p>
+												<a href="" class="btn btn-default add-to-cart"  data-action ="add" data-product = '{{ product.id }}'  ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+											</div>
+
+											<div class="product-overlay">
+
+
+
+												<a href="{% url 'Home:ProductDetail' product.id %}" >
+													<div class="overlay-content">
+
+												{% if product.special_price_test %}
+														<h2 ><span style="text-decoration: line-through; color:black;">${{product.price}}</span>${{product.special_price}}</h2>
+
+												{% else %}
+
+														<h2>${{product.price}}</h2>
+
+												{% endif %}
+
+													<p>{{product.short_description}}</p>
+													<a href="" class="btn btn-default add-to-cart"  data-action ="add" data-product = '{{ product.id }}'   ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+													</div>
+												</a>
+											</div>
+										{% if product.special_price_test %}
+										<img src="static/Eshopper/images/home/sale.png" class="new" alt="">
+										{% endif %}
+										{% if product.is_new %}
+										<img src="static/Eshopper/images/home/new.png" class="new" alt="">
+										{% endif %}
+
+<!--										<img src="static/Eshopper/images/home/new.png" class="new" alt="">-->
+									</div>
+
+									<div class="choose">
+										<ul class="nav nav-pills nav-justified">
+											<li><a href="" class="add-to-whishlist" data-action="add" data-product = '{{ product.id }}' ><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+										</ul>
+									</div>
+								</div>
+
+							</div>
+						{% endfor %}
+
+						<div class="load_data">
+
+						</div>
+
+					</div>
+					<div class="load_data_message">
+						<a class="btn btn-default button-message">load more</a>
+					</div>
+
+<!-------------------------       upto here       	-------------------------------------------------------------------------->
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+{% endblock %}
+
+
+{% block extra %}
+
+<script>
+
+<!--$(document).ready(function(){-->
+<!--	$(".price-filter-button").on('click',function(){-->
+
+<!--	var data=$(".tooltip-inner").text()-->
+
+<!--		alert(data)-->
+
+<!--    var new_data = data.split(":")-->
+<!--	var min_price = new_data[0]-->
+<!--	var max_price = new_data[1]-->
+
+<!--	var url = "{% url 'Home:index' %}"-->
+<!--&lt;!&ndash;	var token = '{{ csrf_token }}';&ndash;&gt;-->
+
+
+<!--		$.ajax({-->
+<!--		type:"GET",-->
+<!--		url: url,-->
+<!--		data: {-->
+<!--          'min_price': min_price ,-->
+<!--          'max_price': max_price ,-->
+<!--        },-->
+
+<!--		success: function(data){-->
+<!--		$("#category-new-data").empty().append(data);-->
+<!--		alert(data)-->
+<!--		},-->
+
+<!--		});-->
+
+
+
+
+<!--	});-->
+
+
+
+<!--})-->
+
+$('.slider').on('slide',function(event,ui){
+	var min_price = event.value[0];
+	var max_price = event.value[1];
+
+	var url = "{% url 'Home:index' %}"
+	var token = '{{ csrf_token }}';
+
+
+
+		$.ajax({
+		type:"GET",
+		headers: {
+						'X-CSRFToken': token
+				   },
+		url: url,
+		data: {
+          'min_price': min_price ,
+          'max_price': max_price ,
+        },
+
+		success: function(data){
+		$(".load_data_message").empty()
+		$("#category-new-data").empty().append(data);
+<!--		alert(data)-->
+		},
+
+		});
+
+
+
+	});
+
+
+</script>
+
+{% endblock %}
